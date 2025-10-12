@@ -1,0 +1,50 @@
+--duckdb
+
+-- ================================================
+-- PROCESSO DE ABRIR O DUCKDB
+-- ================================================
+
+--Abre o terminal na pasta do duckdb.exe
+--Abre o Explorador do Windows e vai até à pasta:
+--\BigDataFoundations\app
+--Clica na barra de endereço e escreve:
+
+cmd
+
+--Isto abre um terminal já dentro dessa pasta.
+--Alternativa: carrega no botão do lado direito do rato dentro da pasta e escolher "abrir no terminar".
+--Agora escreve:
+
+duckdb
+--(Se o Windows não reconhecer o comando, escreve .\duckdb em vez de duckdb.)
+
+--Deverás ver algo como:
+--v1.x.x [CLI]
+--Enter ".help" for usage hints.
+--D >
+
+-- ================================================
+-- INICIALIZAR A BASE DE DADOS DENTRO DO DUCKDB
+-- ================================================
+
+.open movielens 100K.duckdb
+--Isto cria um ficheiro de base de dados na mesma pasta do duckdb.exe.
+
+-- ================================================
+-- Liga o caminho absoluto da pasta dos dados
+-- ================================================
+
+--Assumindo que os ficheiros .csv estão na pasta:
+--C:\Users\sergi\O meu disco\NOVA IMS\EDSA\Big Data Foundations\BigDataFoundations\data
+
+--Criação de tabela com os dados que estão noutra pasta
+D CREATE TABLE movies AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/Movielens 100k/movies.csv");
+
+--Criação de tabela com os dados que estão noutra pasta
+D CREATE TABLE ratings AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/Movielens 100k/ratings.csv");
+
+--Criação de tabela com os dados que estão noutra pasta
+D CREATE TABLE links AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/Movielens 100k/links.csv");
+
+--ver tabelas criadas
+D SHOW TABLES;

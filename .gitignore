@@ -1,72 +1,60 @@
-# =====================================================
-# 🐍 GITIGNORE PARA PROJETOS PYTHON (VS CODE + .venv)
-# =====================================================
+# ===============================================
+# Ficheiros e pastas específicos do projeto
+# ===============================================
 
-# 👉 Ambiente virtual
-.venv/
-venv/
+# Ignorar base de dados DuckDB
+*.duckdb
 
-# 👉 Ficheiros de cache do Python
-__pycache__/
-*.py[cod]
-*$py.class
+# Ignorar ficheiros de dados grandes (CSV, Parquet, etc.)
+data/*.csv
+data/*.parquet
+data/*.tsv
+data/*.json
+data/*.xlsx
 
-# 👉 Ficheiros temporários e logs
-*.log
-*.tmp
-*.bak
-*.swp
-*.swo
-
-# 👉 Ficheiros de configuração locais
-.env
-*.env
-*.ini
-*.cfg
-
-# 👉 Notebooks temporários / checkpoints
-.ipynb_checkpoints/
-
-# 👉 Saídas de build, distribuição e pacotes
-build/
-dist/
-*.egg-info/
-.eggs/
-pip-wheel-metadata/
-
-# 👉 Dados e resultados locais (ajusta conforme o projeto)
-data/raw/
-data/tmp/
-data/interim/
-reports/tmp/
-outputs/
-*.csv
-*.xlsx
-
-# 👉 VS Code e editor
+# ===============================================
+# Visual Studio Code
+# ===============================================
 .vscode/
-.idea/
+.history/
 *.code-workspace
 
-# 👉 Sistema operativo
+# ===============================================
+# Ambientes virtuais (Python / Conda / venv)
+# ===============================================
+venv/
+.env/
+.env.bak/
+*.env
+
+# ===============================================
+# Jupyter Notebooks
+# ===============================================
+.ipynb_checkpoints/
+*.ipynb_save
+
+# ===============================================
+# Ficheiros temporários e logs
+# ===============================================
+*.tmp
+*.log
+*.bak
+*.swp
+
+# ===============================================
+# Ficheiros de sistema
+# ===============================================
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# 👉 Jupyter Notebook runtime
-jupyter_notebook_config.py
-.ipython/
+# ===============================================
+# Python cache / build
+# ===============================================
+__pycache__/
+*.py[cod]
+*.pyo
+build/
+dist/
+*.egg-info/
 
-# 👉 Cache do PyTest e outros testes
-.cache/
-.pytest_cache/
-coverage.xml
-htmlcov/
-.tox/
-
-# 👉 Ficheiros gerados automaticamente
-*.spec
-*.manifest
-
-# 👉 Scripts de ambiente (opcional)
-setup_env.bat
