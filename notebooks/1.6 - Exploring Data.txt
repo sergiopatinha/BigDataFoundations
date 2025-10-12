@@ -1,0 +1,147 @@
+-- ================================================
+-- EXPLORAÇÃO DOS DADOS
+-- ================================================
+--
+-- =================================================================
+--Saber os filmes com melhor nota (com pelo menos 10 classificações)
+-- =================================================================
+--
+-- Classificações médias por filme ordenados da melhor para a pior nota 
+SELECT
+    m.title,
+    AVG(r.rating) AS media_rating,
+    COUNT(*) AS total_ratings
+FROM ratings r
+JOIN movies m USING (movieId)
+GROUP BY m.title
+ORDER BY media_rating DESC, total_ratings DESC;
+
+
+
+--
+-- ================================================
+--Saber as palavras mais frequentes
+-- ================================================
+
+SELECT
+    LOWER(TRIM(word)) AS palavra,
+    COUNT(*) AS total
+FROM (
+    SELECT unnest(string_split(tag, ' ')) AS word
+    FROM tags
+)
+WHERE palavra <> ''
+  AND LENGTH(palavra) > 2
+  AND palavra NOT IN ('the', 'and', 'for', 'with', 'this', 'that', 'are')
+GROUP BY palavra
+ORDER BY total DESC
+LIMIT 30;
+
+-- ================================================
+--Saber a palvra mais repetida por filme:
+-- ================================================
+
+
+WITH palavras_por_filme AS (
+    SELECT
+        t.movieId,
+        LOWER(TRIM(word)) AS palavra,
+        COUNT(*) AS total
+    FROM (
+        SELECT movieId, unnest(string_split(tag, ' ')) AS word
+        FROM tags
+    ) t
+    WHERE palavra <> ''
+      AND LENGTH(palavra) > 2
+      AND palavra NOT IN ('the', 'and', 'for', 'with', 'this', 'that', 'are', 'was')
+    GROUP BY t.movieId, palavra
+),
+ranking_por_filme AS (
+    SELECT
+        movieId,
+        palavra,
+        total,
+        ROW_NUMBER() OVER (PARTITION BY movieId ORDER BY total DESC) AS posicao
+    FROM palavras_por_filme
+)
+SELECT
+    m.movieId,
+    m.title,
+    r.palavra,
+    r.total
+FROM ranking_por_filme r
+JOIN movies m USING (movieId)
+WHERE r.posicao <= 5
+ORDER BY r.total DESC
+LIMIT 20;
+
+-- ========================================================================
+--Saber os filmes mais vezes classificados ao longo dos anos por trimestre:
+-- ========================================================================
+
+WITH ratings_por_trimestre AS (
+    SELECT
+        movieId,
+        EXTRACT(YEAR FROM timestamp) AS ano,
+        ((EXTRACT(QUARTER FROM timestamp))) AS trimestre,
+        COUNT(*) AS total_ratings
+    FROM ratings
+    GROUP BY ano, trimestre, movieId
+),
+ranking_por_trimestre AS (
+    SELECT
+        movieId,
+        ano,
+        trimestre,
+        total_ratings,
+        ROW_NUMBER() OVER (PARTITION BY ano, trimestre ORDER BY total_ratings DESC) AS posicao
+    FROM ratings_por_trimestre
+)
+SELECT
+    r.ano,
+    r.trimestre,
+    m.title,
+    r.total_ratings
+FROM ranking_por_trimestre r
+JOIN movies m USING (movieId)
+WHERE r.posicao = 1
+ORDER BY r.ano, r.trimestre;
+
+-- ==========================================================================
+--Saber os 3 filmes mais vezes classificados ao longo dos anos por trimestre:
+-- ==========================================================================
+
+
+WITH ratings_por_trimestre AS (
+    SELECT
+        movieId,
+        EXTRACT(YEAR FROM timestamp) AS ano,
+        EXTRACT(QUARTER FROM timestamp) AS trimestre,
+        COUNT(*) AS total_ratings
+    FROM ratings
+    GROUP BY ano, trimestre, movieId
+),
+ranking_por_trimestre AS (
+    SELECT
+        movieId,
+        ano,
+        trimestre,
+        total_ratings,
+        ROW_NUMBER() OVER (
+            PARTITION BY ano, trimestre
+            ORDER BY total_ratings DESC
+        ) AS posicao
+    FROM ratings_por_trimestre
+)
+SELECT
+    r.ano,
+    CONCAT('Q', r.trimestre) AS trimestre,
+    r.posicao,
+    m.title,
+    r.total_ratings
+FROM ranking_por_trimestre r
+JOIN movies m USING (movieId)
+WHERE r.posicao <= 3
+ORDER BY r.ano, r.trimestre, r.posicao;
+
+

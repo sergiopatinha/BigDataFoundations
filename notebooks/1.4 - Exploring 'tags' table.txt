@@ -1,0 +1,36 @@
+-- ================================================
+-- EXPLORAÇÃO INICIAL DA TABELA "tags"
+-- ================================================
+
+-- Ver estrutura da tabela (colunas e tipos de dados)
+DESCRIBE tags;
+
+--
+-- Comentário
+--
+-- "userID": BIGINT 64 bits value;
+-- "movieID":  BIGINT 64 bits value;
+-- "tag": VARCHAR;
+-- "timestamp":  BIGINT 64 bits value;
+
+--Ver o tipo de dados de cada coluna
+PRAGMA table_info('tags');
+
+--
+-- A coluna "notnull boolean" indica 4 valores zeros.
+-- Assim esta tabela aceita nulos ou NULL.
+-- Como df foi carregado com read_csv_auto, DuckDB não aplica restrições de NOT NULL
+--
+--Coluna flt_value mostra valor por defeito atribuído caso não seja especificado outro valor quando fazes um INSERT.
+--Nos datasets importados com read_csv_auto (como o MovieLens), esta coluna vai quase sempre aparecer como NULL
+--
+--pk boolean indica se aquela coluna faz parte da chave primária da tabela
+--Não faz parte
+--
+
+--Ver primeiras 10 linhas
+SELECT * FROM tags LIMIT 10;
+
+-- Contar o número total de linhas
+SELECT COUNT(*) AS total_registos FROM tags;
+

@@ -15,7 +15,10 @@ cmd
 --Alternativa: carrega no botão do lado direito do rato dentro da pasta e escolher "abrir no terminar".
 --Agora escreve:
 
+.\duckdb
+--ou
 duckdb
+
 --(Se o Windows não reconhecer o comando, escreve .\duckdb em vez de duckdb.)
 
 --Deverás ver algo como:
@@ -27,7 +30,7 @@ duckdb
 -- INICIALIZAR A BASE DE DADOS DENTRO DO DUCKDB
 -- ================================================
 
-.open movielens 100K.duckdb
+.open movielens100K.duckdb
 --Isto cria um ficheiro de base de dados na mesma pasta do duckdb.exe.
 
 -- ================================================
@@ -38,13 +41,32 @@ duckdb
 --C:\Users\sergi\O meu disco\NOVA IMS\EDSA\Big Data Foundations\BigDataFoundations\data
 
 --Criação de tabela com os dados que estão noutra pasta
-D CREATE TABLE movies AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/Movielens 100k/movies.csv");
+CREATE OR REPLACE TABLE movies AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/movies.csv");
 
 --Criação de tabela com os dados que estão noutra pasta
-D CREATE TABLE ratings AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/Movielens 100k/ratings.csv");
+CREATE OR REPLACE TABLE ratings AS
+SELECT
+    userId,
+    movieId,
+    rating,
+    to_timestamp(timestamp) AS timestamp
+FROM read_csv_auto('C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/ratings.csv');
+
 
 --Criação de tabela com os dados que estão noutra pasta
-D CREATE TABLE links AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/Movielens 100k/links.csv");
+CREATE OR REPLACE TABLE links AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/links.csv");
+
+--Criação de tabela com os dados que estão noutra pasta
+--CREATE OR REPLACE TABLE tags AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/tags.csv");
+
+--Criação de tabela com os dados que estão noutra pasta
+CREATE OR REPLACE TABLE tags AS
+SELECT
+    userId,
+    movieId,
+    tag,
+    to_timestamp(timestamp) AS timestamp
+FROM read_csv_auto('C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/tags.csv');
 
 --ver tabelas criadas
-D SHOW TABLES;
+SHOW TABLES;

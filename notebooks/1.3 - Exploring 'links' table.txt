@@ -1,0 +1,50 @@
+-- ================================================
+-- EXPLORAÇÃO INICIAL DA TABELA "links"
+-- ================================================
+
+
+--To know Before:
+--movieId is an identifier for movies used by <https://movielens.org>. E.g., the movie Toy Story has the link <https://movielens.org/movies/1>
+
+--imdbId is an identifier for movies used by <http://www.imdb.com>. E.g., the movie Toy Story has the link --<http://www.imdb.com/title/tt0114709/>.
+
+--tmdbId is an identifier for movies used by <https://www.themoviedb.org>. E.g., the movie Toy Story has the link --<https://www.themoviedb.org/movie/862>.
+
+Use of the resources listed above is subject to the terms of each provider.
+-- ================================================
+
+-- Ver estrutura da tabela (colunas e tipos de dados)
+DESCRIBE links;
+
+--
+-- Comentário
+--
+-- "movieID":  BIGINT 64 bits value;
+-- "imdbID": VARCHAR
+-- "tmdbID":  BIGINT 64 bits value;
+
+
+--Ver o tipo de dados de cada coluna
+PRAGMA table_info('links');
+
+--
+-- A coluna "notnull boolean" indica 4 valores zeros.
+-- Assim esta tabela aceita nulos ou NULL.
+-- Como df foi carregado com read_csv_auto, DuckDB não aplica restrições de NOT NULL
+--
+--Coluna flt_value mostra valor por defeito atribuído caso não seja especificado outro valor quando fazes um INSERT.
+--Nos datasets importados com read_csv_auto (como o MovieLens), esta coluna vai quase sempre aparecer como NULL
+--
+--pk boolean indica se aquela coluna faz parte da chave primária da tabela
+--Não faz parte
+--
+
+--Ver primeiras 10 linhas
+SELECT * FROM links LIMIT 10;
+
+-- Contar o número total de linhas
+SELECT COUNT(*) AS total_registos FROM links;
+
+.exit
+
+

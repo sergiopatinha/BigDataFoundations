@@ -1,0 +1,128 @@
+-- ================================================
+-- EXPLORAÇÃO INICIAL DA TABELA "ratings"
+-- ================================================
+
+-- Ver estrutura da tabela (colunas e tipos de dados)
+DESCRIBE ratings;
+
+--
+-- Comentário
+--
+-- "userID": BIGINT 64 bits value;
+-- "movieID":  BIGINT 64 bits value;
+-- "rating": DOUBLE
+-- "timestamp":  BIGINT 64 bits value;
+
+--
+-- Coluna "null":
+-- Indica se a coluna pode conter valores nulos (NULL).
+-- Neste caso pode.
+--
+-- Coluna "key":
+-- Indica se coluna é chave primária (PRIMARY KEY).
+-- Não faz.
+--
+-- Coluna "default":
+-- Indica se mostra o valor por defeito (DEFAULT).
+-- Não tem
+--
+-- Coluna "extra"
+-- Mostra informações adicionais sobre a coluna, como: auto_increment ou generated.
+-- Neste caso não tem
+
+--
+--Ver o tipo de dados de cada coluna
+PRAGMA table_info('ratings');
+
+--
+--Comentário
+--
+-- "userID": BIGINT 64 bits value;
+-- "movieID":  BIGINT 64 bits value;
+-- "rating": DOUBLE
+-- "timestamp":  BIGINT 64 bits value;
+--
+-- A coluna "notnull boolean" indica 4 valores zeros.
+-- Assim esta tabela aceita nulos ou NULL.
+-- Como df foi carregado com read_csv_auto, DuckDB não aplica restrições de NOT NULL
+--
+--Coluna flt_value mostra valor por defeito atribuído caso não seja especificado outro valor quando fazes um INSERT.
+--Nos datasets importados com read_csv_auto (como o MovieLens), esta coluna vai quase sempre aparecer como NULL
+--
+--pk boolean indica se aquela coluna faz parte da chave primária da tabela
+--Não faz parte
+--
+
+--Ver primeiras 10 linhas
+SELECT * FROM ratings LIMIT 10;
+
+--Identificação dos valores máximos, mínimos e contagens das avaliações 
+SELECT
+    -- Utilizadores
+    MIN(userId) AS min_userId,
+    MAX(userId) AS max_userId,
+    COUNT(DISTINCT userId) AS total_users,
+
+    -- Filmes
+    MIN(movieId) AS min_movieId,
+    MAX(movieId) AS max_movieId,
+    COUNT(DISTINCT movieId) AS total_movies,
+
+    -- Ratings
+    MIN(rating) AS min_rating,
+    MAX(rating) AS max_rating,
+    MEAN(rating) AS med_rating,
+
+    -- Timestamps
+    MIN(timestamp) AS min_timestamp,
+    MAX(timestamp) AS max_timestamp,
+
+    -- Total geral de linhas
+    COUNT(*) AS total_ratings
+    FROM ratings;
+
+--
+--Comentários
+--Temos 610 userID a comentar.
+--9724 movies evaluated
+--Rating between 0,5 and 5,0 and mean value of 3,50155
+--O time Stamp mais antigo de uma classificação foi em 29 Marços de 1996 às 19.36.55s
+--Timestamp mais recente em 2018 24 de Setembro às 15:27 e 30 minutos.
+--Temos um total de 100836 ratings (linhas).
+
+-- Número de ratings e nota média por utilizador
+SELECT
+    userId,
+    COUNT(*) AS total_ratings,
+    AVG(rating) AS media_rating
+FROM ratings
+GROUP BY userId
+ORDER BY total_ratings DESC;
+
+--
+--Comentários
+--User 414 foi o que mais classificou com 2698 ratings e um valor médio de 3.39 por rating.
+--Depois temos 6 User com 20 classificações cada um e com uma média entre 1.725 e 5.0
+
+--
+-- Classificações médias por filme ordenados da melhor para a pior nota 
+SELECT
+    m.title,
+    AVG(r.rating) AS media_rating,
+    COUNT(*) AS total_ratings
+FROM ratings r
+JOIN movies m USING (movieId)
+GROUP BY m.title
+ORDER BY media_rating DESC, total_ratings DESC;
+
+--
+-- Classificações médias por filme ordenados do mais classificado para o menor
+SELECT
+    m.title,
+    AVG(r.rating) AS media_rating,
+    COUNT(*) AS total_ratings
+FROM ratings r
+JOIN movies m USING (movieId)
+GROUP BY m.title
+ORDER BY total_ratings DESC, media_rating DESC;
+

@@ -1,0 +1,100 @@
+-- ================================================
+-- EXPLORAÇÃO INICIAL DA TABELA "movies"
+-- ================================================
+
+-- Ver estrutura da tabela (colunas e tipos de dados)
+DESCRIBE movies;
+
+--
+-- Comentário
+--
+-- "movieID": BIGINT 64 bits value;
+-- "title": movie name in VARCHAR → texto
+-- "genres": Genres name in VARCHAR → texto
+--
+-- Coluna "null":
+-- Indica se a coluna pode conter valores nulos (NULL).
+-- Neste caso pode.
+--
+-- Coluna "key":
+-- Indica se coluna é chave primária (PRIMARY KEY).
+-- Não faz.
+--
+-- Coluna "default":
+-- Indica se mostra o valor por defeito (DEFAULT).
+-- Não tem
+--
+-- Coluna "extra"
+-- Mostra informações adicionais sobre a coluna, como: auto_increment ou generated.
+-- Neste caso não tem
+
+
+--Ver o tipo de dados de cada coluna
+PRAGMA table_info('movies');
+
+--
+--Comentário
+--
+-- "movieID": BIGINT 64 bits value;
+-- "title": movie name in VARCHAR → texto
+-- "genres": Genres name in VARCHAR → texto
+--
+-- A coluna "notnull boolean" indica 3 valores zeros.
+-- Assim esta tabela aceita nulos ou NULL.
+-- Como df foi carregado com read_csv_auto, DuckDB não aplica restrições de NOT NULL
+--
+--Coluna flt_value mostra valor por defeito atribuído caso não seja especificado outro valor quando fazes um INSERT.
+--Nos datasets importados com read_csv_auto (como o MovieLens), esta coluna vai quase sempre aparecer como NULL
+--
+--pk boolean indica se aquela coluna faz parte da chave primária da tabela
+--Não faz parte
+--
+
+--Ver primeiras 10 linhas
+SELECT * FROM movies LIMIT 10;
+
+-- Contar o número total de linhas
+SELECT COUNT(*) FROM movies;
+
+--CONCLUSÃO:
+-- Esta tabela serve para identificar os filmes presentes na presente database.
+-- Identifica o ID de cada filme e o genero associado. 
+-- Não tem chaves primárias
+-- Temos no total 9742 filmes.
+-- Cada filme pode ter mais do que um estilo.
+
+--Ver distribuição de valores
+SELECT genres, COUNT(*) AS n
+FROM movies
+GROUP BY genres
+ORDER BY n DESC
+LIMIT 20;
+
+--Verifica-se que podem haver misturas de estilos que podem toerna dificil a quantificação dos estilos;
+--Exemplo Drama, Comedy| Drama e etc o que pode dificultar a contabilização
+
+--Contar quantos filmes temos por género sabendo que o campo genres no MovieLens tem vários géneros por filme, separados por barras (|).
+ 
+SELECT
+    genre,
+    COUNT(*) AS total_filmes
+FROM (
+    SELECT unnest(string_split(genres, '|')) AS genre
+    FROM movies
+)
+GROUP BY genre
+ORDER BY total_filmes DESC;
+
+-- Ver quantos géneros em média tem cada filme
+SELECT
+    AVG(array_length(string_split(genres, '|'))) AS media_generos_por_filme
+FROM movies;
+
+-- Ver filmes com o maior número de géneros
+SELECT
+    title,
+    genres,
+    array_length(string_split(genres, '|')) AS n_generos
+FROM movies
+ORDER BY n_generos DESC, title
+LIMIT 10;
