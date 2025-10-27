@@ -56,6 +56,14 @@ PRAGMA table_info('ratings');
 --Ver primeiras 10 linhas
 SELECT * FROM ratings LIMIT 10;
 
+-- Contar o número de missing values
+SELECT
+    COUNT(*) - COUNT(userID) AS missing_userID,
+    COUNT(*) - COUNT(movieId) AS missing_movieId,
+    COUNT(*) - COUNT(rating) AS missing_rating,
+    COUNT(*) - COUNT(timestamp) AS missing_timestamp
+FROM ratings;
+
 --Identificação dos valores máximos, mínimos e contagens das avaliações 
 SELECT
     -- Utilizadores

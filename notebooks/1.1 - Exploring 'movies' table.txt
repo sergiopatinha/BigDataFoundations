@@ -63,6 +63,17 @@ SELECT COUNT(*) FROM movies;
 -- Temos no total 9742 filmes.
 -- Cada filme pode ter mais do que um estilo.
 
+-- Contar o número de missing values
+SELECT
+    COUNT(*) - COUNT(movieId) AS missing_movieId,
+    COUNT(*) - COUNT(title) AS missing_title,
+    COUNT(*) - COUNT(genres) AS missing_genres
+FROM movies;
+
+--CONCLUSÃO:
+-- Não tem missing values.
+
+
 --Ver distribuição de valores
 SELECT genres, COUNT(*) AS n
 FROM movies
@@ -70,7 +81,7 @@ GROUP BY genres
 ORDER BY n DESC
 LIMIT 20;
 
---Verifica-se que podem haver misturas de estilos que podem toerna dificil a quantificação dos estilos;
+--Verifica-se que podem haver misturas de estilos que podem tornar difícil a quantificação dos estilos;
 --Exemplo Drama, Comedy| Drama e etc o que pode dificultar a contabilização
 
 --Contar quantos filmes temos por género sabendo que o campo genres no MovieLens tem vários géneros por filme, separados por barras (|).

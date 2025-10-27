@@ -38,10 +38,10 @@ duckdb
 -- ================================================
 
 --Assumindo que os ficheiros .csv estão na pasta:
---C:\Users\sergi\O meu disco\NOVA IMS\EDSA\Big Data Foundations\BigDataFoundations\data
+--C:\Users\sergi\O meu disco\NOVA IMS\EDSA\7 - Big Data Foundations\BigDataFoundations\data
 
 --Criação de tabela com os dados que estão noutra pasta
-CREATE OR REPLACE TABLE movies AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/movies.csv");
+CREATE OR REPLACE TABLE movies AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/7 - Big Data Foundations/BigDataFoundations/data/100k/movies.csv");
 
 --Criação de tabela com os dados que estão noutra pasta
 CREATE OR REPLACE TABLE ratings AS
@@ -50,14 +50,14 @@ SELECT
     movieId,
     rating,
     to_timestamp(timestamp) AS timestamp
-FROM read_csv_auto('C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/ratings.csv');
+FROM read_csv_auto('C:/Users/sergi/O meu disco/NOVA IMS/EDSA/7 - Big Data Foundations/BigDataFoundations/data/100k/ratings.csv');
 
 
 --Criação de tabela com os dados que estão noutra pasta
-CREATE OR REPLACE TABLE links AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/links.csv");
+CREATE OR REPLACE TABLE links AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/7 - Big Data Foundations/BigDataFoundations/data/100k/links.csv");
 
 --Criação de tabela com os dados que estão noutra pasta
---CREATE OR REPLACE TABLE tags AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/tags.csv");
+--CREATE OR REPLACE TABLE tags AS SELECT * FROM read_csv_auto("C:/Users/sergi/O meu disco/NOVA IMS/EDSA/7 - Big Data Foundations/BigDataFoundations/data/100k/tags.csv");
 
 --Criação de tabela com os dados que estão noutra pasta
 CREATE OR REPLACE TABLE tags AS
@@ -66,7 +66,7 @@ SELECT
     movieId,
     tag,
     to_timestamp(timestamp) AS timestamp
-FROM read_csv_auto('C:/Users/sergi/O meu disco/NOVA IMS/EDSA/Big Data Foundations/BigDataFoundations/data/100k/tags.csv');
+FROM read_csv_auto('C:/Users/sergi/O meu disco/NOVA IMS/EDSA/7 - Big Data Foundations/BigDataFoundations/data/100k/tags.csv');
 
 --ver tabelas criadas
 SHOW TABLES;

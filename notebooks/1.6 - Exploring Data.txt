@@ -20,7 +20,7 @@ ORDER BY media_rating DESC, total_ratings DESC;
 
 --
 -- ================================================
---Saber as palavras mais frequentes
+--Saber os tags mais frequentes
 -- ================================================
 
 SELECT
@@ -38,7 +38,7 @@ ORDER BY total DESC
 LIMIT 30;
 
 -- ================================================
---Saber a palvra mais repetida por filme:
+--Saber o tag mais repetido por filme:
 -- ================================================
 
 
