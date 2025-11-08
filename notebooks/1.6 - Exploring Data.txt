@@ -3,19 +3,132 @@
 -- ================================================
 --
 -- =================================================================
---Saber os filmes com melhor nota (com pelo menos 10 classificações)
+--Saber os 20 filmes com melhor nota (com pelo menos 50 classificações)
 -- =================================================================
 --
 -- Classificações médias por filme ordenados da melhor para a pior nota 
 SELECT
     m.title,
-    AVG(r.rating) AS media_rating,
+    round(AVG(r.rating),2) AS media_rating,
     COUNT(*) AS total_ratings
 FROM ratings r
 JOIN movies m USING (movieId)
 GROUP BY m.title
-ORDER BY media_rating DESC, total_ratings DESC;
+HAVING COUNT(*) > 50
+ORDER BY media_rating DESC, total_ratings DESC
+LIMIT 20;
 
+--
+-- =================================================================
+--ranking dos 20 filmes com mais classificações (ratings)
+-- =================================================================
+SELECT
+    m.title,
+    COUNT(*) AS total_ratings,
+    ROUND(AVG(r.rating), 2) AS media_rating
+FROM ratings r
+JOIN movies m USING (movieId)
+GROUP BY m.title
+ORDER BY total_ratings DESC, media_rating DESC
+LIMIT 20;
+
+
+--
+-- =================================================================
+-- ranking dos filmes por genero (com pelo menos 50 avaliações)
+-- =================================================================
+
+WITH genero_filme AS (
+    SELECT
+        m.movieId,
+        m.title,
+        unnest(string_split(m.genres, '|')) AS genre
+    FROM movies m
+),
+stats_genero_filme AS (
+    SELECT
+        gf.genre,
+        gf.movieId,
+        gf.title,
+        COUNT(*) AS total_ratings,
+        AVG(r.rating) AS media_rating
+    FROM genero_filme gf
+    JOIN ratings r
+      ON r.movieId = gf.movieId
+    GROUP BY gf.genre, gf.movieId, gf.title
+    HAVING COUNT(*) >= 50          -- 👈 mínimo de 10 ratings
+),
+ranking_por_genero AS (
+    SELECT
+        genre,
+        movieId,
+        title,
+        total_ratings,
+        media_rating,
+        ROW_NUMBER() OVER (
+            PARTITION BY genre
+            ORDER BY media_rating DESC, total_ratings DESC
+        ) AS posicao
+    FROM stats_genero_filme
+)
+SELECT
+    genre,
+    title,
+    ROUND(media_rating, 2) AS media_rating,
+    total_ratings
+FROM ranking_por_genero
+WHERE posicao = 1
+ORDER BY genre;
+
+
+--
+-- =================================================================
+-- ranking dos filmes + avaliados por genero (com pelo menos 50 avaliações)
+-- =================================================================
+
+
+WITH genero_filme AS (
+    SELECT
+        m.movieId,
+        m.title,
+        unnest(string_split(m.genres, '|')) AS genre
+    FROM movies m
+),
+stats_genero_filme AS (
+    SELECT
+        gf.genre,
+        gf.movieId,
+        gf.title,
+        COUNT(*) AS total_ratings,
+        AVG(r.rating) AS media_rating
+    FROM genero_filme gf
+    JOIN ratings r
+      ON r.movieId = gf.movieId
+    GROUP BY gf.genre, gf.movieId, gf.title
+    HAVING COUNT(*) >= 50  -- mantém só filmes com pelo menos 50 avaliações
+),
+ranking_por_genero AS (
+    SELECT
+        genre,
+        movieId,
+        title,
+        total_ratings,
+        media_rating,
+        ROW_NUMBER() OVER (
+            PARTITION BY genre
+            ORDER BY total_ratings DESC, media_rating DESC
+        ) AS posicao
+    FROM stats_genero_filme
+)
+SELECT
+    genre,
+--    posicao,
+    title,
+    total_ratings,
+    ROUND(media_rating, 2) AS media_rating
+FROM ranking_por_genero
+WHERE posicao <= 1
+ORDER BY genre, posicao;
 
 
 --
@@ -74,6 +187,28 @@ JOIN movies m USING (movieId)
 WHERE r.posicao <= 5
 ORDER BY r.total DESC
 LIMIT 20;
+
+-- ================================================
+--Saber os users com mais qt de ratings e nota média
+-- ================================================
+
+SELECT
+    r.userId,
+    COUNT(*) AS total_ratings,
+    ROUND(AVG(r.rating), 2) AS media_rating
+FROM ratings r
+GROUP BY r.userId
+ORDER BY total_ratings DESC, media_rating DESC
+LIMIT 20;
+
+
+
+
+
+
+
+
+--********DESNECESSARIO***********************************
 
 -- ========================================================================
 --Saber os filmes mais vezes classificados ao longo dos anos por trimestre:
@@ -145,3 +280,92 @@ WHERE r.posicao <= 3
 ORDER BY r.ano, r.trimestre, r.posicao;
 
 
+
+-- ==============================================================
+--Saber as medias dos ratings dos 20 users com mais qt de ratings
+-- ==============================================================
+WITH top_users AS (
+    -- 1️⃣ Encontrar os 50 utilizadores com mais ratings
+    SELECT
+        userId,
+        COUNT(*) AS total_ratings
+    FROM ratings
+    GROUP BY userId
+    ORDER BY total_ratings DESC
+    LIMIT 10
+),
+ratings_com_ano AS (
+    -- 2️⃣ Extrair o ano do timestamp e filtrar apenas os top users
+    SELECT
+        r.userId,
+        YEAR(r.timestamp) AS ano,
+        r.rating
+    FROM ratings r
+    JOIN top_users t USING (userId)
+)
+-- 3️⃣ Calcular a média anual de ratings por utilizador
+SELECT
+    userId,
+    ano,
+    ROUND(AVG(rating), 2) AS media_anual,
+    COUNT(*) AS total_ratings_ano
+FROM ratings_com_ano
+GROUP BY userId, ano
+ORDER BY ano, userId;
+
+
+-- =================================================================================
+-- Quais foram os géneros mais populares em diferentes décadas (anos 80, 90, 2000…)?
+-- =================================================================================
+
+WITH genero_filme AS (
+    -- 1️⃣ Explodir géneros (um por linha)
+    SELECT
+        m.movieId,
+        m.title,
+        unnest(string_split(m.genres, '|')) AS genre
+    FROM movies m
+),
+stats_filme AS (
+    -- 2️⃣ Calcular nº total de ratings e média por filme
+    SELECT
+        movieId,
+        COUNT(*) AS total_ratings,
+        AVG(rating) AS media_filme
+    FROM ratings
+    GROUP BY movieId
+    HAVING COUNT(*) >= 50   -- ✅ só filmes com pelo menos 50 ratings
+),
+filmes_validos AS (
+    -- 3️⃣ Juntar info de filmes e géneros (apenas filmes válidos)
+    SELECT
+        g.movieId,
+        g.genre,
+        g.title
+    FROM genero_filme g
+    JOIN stats_filme s USING (movieId)
+),
+ratings_com_decada AS (
+    -- 4️⃣ Juntar ratings + década
+    SELECT
+        r.rating,
+        f.genre,
+        CASE
+            WHEN EXTRACT(YEAR FROM r.timestamp) BETWEEN 1980 AND 1989 THEN '1980s'
+            WHEN EXTRACT(YEAR FROM r.timestamp) BETWEEN 1990 AND 1999 THEN '1990s'
+            WHEN EXTRACT(YEAR FROM r.timestamp) BETWEEN 2000 AND 2009 THEN '2000s'
+            WHEN EXTRACT(YEAR FROM r.timestamp) BETWEEN 2010 AND 2019 THEN '2010s'
+            ELSE 'Outros'
+        END AS decada
+    FROM ratings r
+    JOIN filmes_validos f USING (movieId)
+)
+-- 5️⃣ Estatísticas por década e género
+SELECT
+    decada,
+    genre,
+    COUNT(*) AS total_ratings,
+    ROUND(AVG(rating), 2) AS media_rating
+FROM ratings_com_decada
+GROUP BY decada, genre
+ORDER BY genre, decada DESC;

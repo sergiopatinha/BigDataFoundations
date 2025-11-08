@@ -3,12 +3,12 @@
 -- ================================================
 
 -- Eliminação dos filmes com menos de 10 classificações da tabela
-CREATE OR REPLACE TABLE ratings AS
-SELECT *
-FROM ratings
-WHERE movieId IN (
-    SELECT movieId
-    FROM ratings
-    GROUP BY movieId
-    HAVING COUNT(*) >= 10
-);
+--CREATE OR REPLACE TABLE ratings AS
+--SELECT *
+--FROM ratings
+--WHERE movieId IN (
+--    SELECT movieId
+--    FROM ratings
+--    GROUP BY movieId
+--    HAVING COUNT(*) >= 10
+--);

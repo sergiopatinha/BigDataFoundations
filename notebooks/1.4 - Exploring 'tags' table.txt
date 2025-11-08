@@ -34,3 +34,10 @@ SELECT * FROM tags LIMIT 10;
 -- Contar o número total de linhas
 SELECT COUNT(*) AS total_registos FROM tags;
 
+-- Contar o número de missing values
+SELECT
+    COUNT(*) - COUNT(userId) AS missing_userId,
+    COUNT(*) - COUNT(movieId) AS missing_movieId,
+    COUNT(*) - COUNT(tag) AS missing_tag,
+    COUNT(*) - COUNT(timestamp) AS missing_timestamp
+FROM tags;

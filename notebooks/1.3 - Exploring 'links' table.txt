@@ -10,7 +10,7 @@
 
 --tmdbId is an identifier for movies used by <https://www.themoviedb.org>. E.g., the movie Toy Story has the link --<https://www.themoviedb.org/movie/862>.
 
-Use of the resources listed above is subject to the terms of each provider.
+--Use of the resources listed above is subject to the terms of each provider.
 -- ================================================
 
 -- Ver estrutura da tabela (colunas e tipos de dados)
@@ -45,6 +45,11 @@ SELECT * FROM links LIMIT 10;
 -- Contar o número total de linhas
 SELECT COUNT(*) AS total_registos FROM links;
 
-.exit
+-- Contar o número de missing values
+SELECT
+    COUNT(*) - COUNT(movieId) AS missing_movieId,
+    COUNT(*) - COUNT(imdbID) AS missing_imdbID,
+    COUNT(*) - COUNT(tmdbID) AS missing_tmdbID
+FROM links;
 
 
