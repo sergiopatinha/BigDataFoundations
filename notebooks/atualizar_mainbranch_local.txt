@@ -1,0 +1,15 @@
+--garantir em que branch estamos, devemos estar no nosso main local
+git branch
+
+--o que tiver o asterisco é o branch onde estamos
+
+-- atualizar o nosso main local
+git pull origin main
+
+-- alterar para o nosso branch e confirmar novamente
+git branch
+
+--o que tiver o asterisco é o branch onde estamos
+
+-- fazer o merge do nosso branch com o main atualizado
+git merge main
