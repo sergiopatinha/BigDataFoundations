@@ -27,6 +27,8 @@ venv/
 .env/
 .env.bak/
 *.env
+.venv/
+
 
 # ===============================================
 # Jupyter Notebooks
