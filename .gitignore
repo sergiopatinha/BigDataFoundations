@@ -9,8 +9,11 @@
 
 # Ignorar ficheiros de dados grandes (CSV, Parquet, etc.)
 
-# Ignorar toda a pasta data (mais simples)
-data/
+# Ignora toda a pasta data, exceto s3_paths.txt
+data/**
+!data/1m/
+!data/1m/s3_paths.txt
+!data/.gitkeep
 
 # (ou, se quiseres só por extensão, em qualquer pasta)
 **/*.csv
@@ -19,11 +22,11 @@ data/
 **/*.json
 **/*.xlsx
 
-data/*.csv
-data/*.parquet
-data/*.tsv
-data/*.json
-data/*.xlsx
+#data/*.csv
+#data/*.parquet
+#data/*.tsv
+#data/*.json
+#data/*.xlsx
 
 # ===============================================
 # Visual Studio Code
@@ -42,6 +45,7 @@ venv/
 .venv/
 .venv-franco/
 
+env/
 
 # ===============================================
 # Jupyter Notebooks
