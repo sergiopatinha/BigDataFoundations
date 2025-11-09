@@ -1,0 +1,43 @@
+RESUMO FINAL — COMANDOS PARA .venv (WINDOWS)
+
+--------------------------------------------
+1) CRIAR UM AMBIENTE (venv)
+--------------------------------------------
+
+--> No PowerShell (Windows)
+
+Ir para a pasta do projecto:
+cd "C:\Path\para\o\projecto"
+
+Criar o venv:
+python -m venv .venv
+
+--------------------------------------------
+2) ACTIVAR UM AMBIENTE (venv)
+--------------------------------------------
+
+--> No PowerShell ou terminal do Visual Studio Code
+
+cd "C:\Path\para\o\projecto"
+.\.venv\Scripts\Activate.ps1
+
+O terminal muda e fica assim:
+(.venv) PS C:\Path\para\o\projecto>
+
+SE NÃO APARECER (.venv) => NÃO ESTÁ ACTIVO
+
+--------------------------------------------
+3) NOTAS IMPORTANTES
+--------------------------------------------
+
+- Cada terminal é independente. Se abrires um novo terminal tens de voltar a fazer activate.
+- Se der erro de scripts bloqueados:
+  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+- Para instalar pacotes dentro do venv:
+  pip install duckdb pandas jupyter
+
+--------------------------------------------
+4) DESACTIVAR O AMBIENTE
+--------------------------------------------
+deactivate
