@@ -43,6 +43,7 @@ venv/
 .env.bak/
 *.env
 .venv/
+.venv-franco/
 
 env/
 
