@@ -6,7 +6,19 @@
 *.duckdb
 *.duckdb.wal
 
+
 # Ignorar ficheiros de dados grandes (CSV, Parquet, etc.)
+
+# Ignorar toda a pasta data (mais simples)
+data/
+
+# (ou, se quiseres só por extensão, em qualquer pasta)
+**/*.csv
+**/*.parquet
+**/*.tsv
+**/*.json
+**/*.xlsx
+
 data/*.csv
 data/*.parquet
 data/*.tsv
