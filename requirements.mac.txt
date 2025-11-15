@@ -1,3 +1,4 @@
+# --- Core / Jupyter ---
 anyio==4.11.0
 argon2-cffi==25.1.0
 argon2-cffi-bindings==25.1.0
@@ -8,8 +9,6 @@ attrs==25.4.0
 babel==2.17.0
 beautifulsoup4==4.14.2
 bleach==6.3.0
-boto3==1.40.69
-botocore==1.40.69
 certifi==2025.10.5
 cffi==2.0.0
 charset-normalizer==3.4.4
@@ -37,7 +36,6 @@ ipywidgets==8.1.8
 isoduration==20.11.0
 jedi==0.19.2
 Jinja2==3.1.6
-jmespath==1.0.1
 joblib==1.5.2
 json5==0.12.1
 jsonpointer==3.0.0
@@ -89,8 +87,6 @@ pyparsing==3.2.5
 python-dateutil==2.9.0.post0
 python-json-logger==4.0.0
 pytz==2025.2
-pywin32==311
-pywinpty==3.0.2
 PyYAML==6.0.3
 pyzmq==27.1.0
 referencing==0.37.0
@@ -124,3 +120,15 @@ webcolors==25.10.0
 webencodings==0.5.1
 websocket-client==1.9.0
 widgetsnbextension==4.0.15
+
+# --- Data/Compute ---
+duckdb==1.1.3
+polars==1.9.0
+
+# --- Windows-only (guardado) ---
+pywin32==311; platform_system == "Windows"
+pywinpty==3.0.2; platform_system == "Windows"
+
+# (Opcional, inofensivo) “pins” por arquitetura — mesmos números:
+duckdb==1.1.3; platform_system == "Darwin" and platform_machine == "arm64"
+duckdb==1.1.3; platform_system == "Darwin" and platform_machine == "x86_64"
