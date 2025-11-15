@@ -9,6 +9,9 @@ def get_athena_connection(work_group="primary"):
         region_name=REGION,
         work_group=work_group,
         schema_name=DB_ATHENA,
+        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+        aws_session_token=os.getenv("AWS_SESSION_TOKEN"),
     )
 
 def read_sql_df(sql, conn=None):
