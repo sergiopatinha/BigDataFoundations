@@ -7,7 +7,8 @@ def get_athena_connection(work_group="primary"):
     return connect(
         s3_staging_dir=S3_STAGING,
         region_name=REGION,
-        work_group=work_group
+        work_group=work_group,
+        schema_name=DB_ATHENA,
     )
 
 def read_sql_df(sql, conn=None):
