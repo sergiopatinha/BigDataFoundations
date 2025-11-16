@@ -13,3 +13,14 @@ git branch
 
 -- fazer o merge do nosso branch com o main atualizado
 git merge main
+
+
+
+--Outra forma by sergio patinha
+git checkout main
+git pull origin main
+
+git checkout sergio
+git merge main
+
+git push origin sergio
