@@ -4,8 +4,9 @@
 
 # Ignorar base de dados DuckDB
 *.duckdb
-*.duckdb.wal
-
+*.ducdd
+*.ducdd.wal
+*.duckd
 
 # Ignorar ficheiros de dados grandes (CSV, Parquet, etc.)
 
