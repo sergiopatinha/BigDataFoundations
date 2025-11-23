@@ -24,3 +24,24 @@ git checkout sergio
 git merge main
 
 git push origin sergio
+
+✅ 1. Substituir completamente o conteúdo do teu branch pelo main
+➡️ “Quero que o meu branch fique exatamente igual ao main, ignorando ou descartando as alterações do branch.”
+
+Então:
+
+git checkout o_teu_branch
+git fetch origin
+git reset --hard origin/main
+
+O que isto faz?
+
+reset --hard: substitui todo o histórico e ficheiros do teu branch pelo conteúdo atual do main.
+As tuas alterações locais nesse branch serão descartadas.
+
+✅ 2. Fazer merge, mas dando sempre prioridade ao main
+Se queres fazer merge, mas automaticamente escolher os ficheiros do main em conflitos, usa:
+
+git checkout o_teu_branch
+git fetch origin
+git merge -X theirs origin/main
